@@ -41,7 +41,7 @@ fn update_my_ip(config_source: &DB) -> Result<()> {
 	}
 
 	let full_url = format!("{}?host={}", DDNS_UPDATE_URL, &config.host);
-	let client = reqwest::ClientBuilder::new().build()?;
+	let client = reqwest::blocking::ClientBuilder::new().build()?;
 	let res = client
 		.get(full_url.as_str())
 		.basic_auth(config.username, Some(config.password))

@@ -82,14 +82,14 @@ pub trait TestService {
 	}
 }
 
-#[test]
-fn test_service_index() {
+#[actix_rt::test]
+async fn test_service_index() {
 	let mut service = ServiceType::new(&format!("{}{}", TEST_DB_PREFIX, line!()));
 	service.get("/");
-}
+}      
 
-#[test]
-fn test_service_swagger_index() {
+#[actix_rt::test]
+async fn test_service_swagger_index() {
 	let mut service = ServiceType::new(&format!("{}{}", TEST_DB_PREFIX, line!()));
 	assert_eq!(
 		service.get("/swagger").status(),
@@ -97,22 +97,22 @@ fn test_service_swagger_index() {
 	);
 }
 
-#[test]
-fn test_service_swagger_index_with_trailing_slash() {
+#[actix_rt::test]
+async fn test_service_swagger_index_with_trailing_slash() {
 	let mut service = ServiceType::new(&format!("{}{}", TEST_DB_PREFIX, line!()));
 	assert_eq!(service.get("/swagger/").status(), StatusCode::OK);
 }
 
-#[test]
-fn test_service_version() {
+#[actix_rt::test]
+async fn test_service_version() {
 	let mut service = ServiceType::new(&format!("{}{}", TEST_DB_PREFIX, line!()));
 	let response = service.get_json::<dto::Version>("/api/version");
 	let version = response.body();
 	assert_eq!(version, &dto::Version { major: 5, minor: 0 });
 }
 
-#[test]
-fn test_service_initial_setup() {
+#[actix_rt::test]
+async fn test_service_initial_setup() {
 	let mut service = ServiceType::new(&format!("{}{}", TEST_DB_PREFIX, line!()));
 	{
 		let response = service.get_json::<dto::InitialSetup>("/api/initial_setup");
@@ -137,8 +137,8 @@ fn test_service_initial_setup() {
 	}
 }
 
-#[test]
-fn test_service_settings() {
+#[actix_rt::test]
+async fn test_service_settings() {
 	let mut service = ServiceType::new(&format!("{}{}", TEST_DB_PREFIX, line!()));
 	service.complete_initial_setup();
 
@@ -153,8 +153,8 @@ fn test_service_settings() {
 	assert_eq!(response.status(), StatusCode::OK);
 }
 
-#[test]
-fn test_service_settings_cannot_unadmin_self() {
+#[actix_rt::test]
+async fn test_service_settings_cannot_unadmin_self() {
 	let mut service = ServiceType::new(&format!("{}{}", TEST_DB_PREFIX, line!()));
 	service.complete_initial_setup();
 	service.login();
@@ -169,8 +169,8 @@ fn test_service_settings_cannot_unadmin_self() {
 	assert_eq!(response.status(), StatusCode::CONFLICT);
 }
 
-#[test]
-fn test_service_preferences() {
+#[actix_rt::test]
+async fn test_service_preferences() {
 	let mut service = ServiceType::new(&format!("{}{}", TEST_DB_PREFIX, line!()));
 	service.complete_initial_setup();
 	service.login();
@@ -182,8 +182,8 @@ fn test_service_preferences() {
 	assert_eq!(response.status(), StatusCode::OK);
 }
 
-#[test]
-fn test_service_trigger_index() {
+#[actix_rt::test]
+async fn test_service_trigger_index() {
 	let mut service = ServiceType::new(&format!("{}{}", TEST_DB_PREFIX, line!()));
 	service.complete_initial_setup();
 	service.login();
@@ -199,8 +199,8 @@ fn test_service_trigger_index() {
 	assert_eq!(entries.len(), 3);
 }
 
-#[test]
-fn test_service_auth() {
+#[actix_rt::test]
+async fn test_service_auth() {
 	let mut service = ServiceType::new(&format!("{}{}", TEST_DB_PREFIX, line!()));
 	service.complete_initial_setup();
 
@@ -237,8 +237,8 @@ fn test_service_auth() {
 	}
 }
 
-#[test]
-fn test_service_browse() {
+#[actix_rt::test]
+async fn test_service_browse() {
 	let mut service = ServiceType::new(&format!("{}{}", TEST_DB_PREFIX, line!()));
 	service.complete_initial_setup();
 	service.login();
@@ -262,8 +262,8 @@ fn test_service_browse() {
 	assert_eq!(entries.len(), 5);
 }
 
-#[test]
-fn test_service_flatten() {
+#[actix_rt::test]
+async fn test_service_flatten() {
 	let mut service = ServiceType::new(&format!("{}{}", TEST_DB_PREFIX, line!()));
 	service.complete_initial_setup();
 	service.login();
@@ -278,8 +278,8 @@ fn test_service_flatten() {
 	assert_eq!(entries.len(), 13);
 }
 
-#[test]
-fn test_service_random() {
+#[actix_rt::test]
+async fn test_service_random() {
 	let mut service = ServiceType::new(&format!("{}{}", TEST_DB_PREFIX, line!()));
 	service.complete_initial_setup();
 	service.login();
@@ -290,8 +290,8 @@ fn test_service_random() {
 	assert_eq!(entries.len(), 3);
 }
 
-#[test]
-fn test_service_recent() {
+#[actix_rt::test]
+async fn test_service_recent() {
 	let mut service = ServiceType::new(&format!("{}{}", TEST_DB_PREFIX, line!()));
 	service.complete_initial_setup();
 	service.login();
@@ -302,8 +302,8 @@ fn test_service_recent() {
 	assert_eq!(entries.len(), 3);
 }
 
-#[test]
-fn test_service_search_root() {
+#[actix_rt::test]
+async fn test_service_search_root() {
 	let mut service = ServiceType::new(&format!("{}{}", TEST_DB_PREFIX, line!()));
 	service.complete_initial_setup();
 	service.login();
@@ -312,8 +312,9 @@ fn test_service_search_root() {
 	assert_eq!(response.status(), StatusCode::OK);
 }
 
-#[test]
-fn test_service_search() {
+
+#[actix_rt::test]
+async fn test_service_search() {
 	let mut service = ServiceType::new(&format!("{}{}", TEST_DB_PREFIX, line!()));
 	service.complete_initial_setup();
 	service.login();
@@ -327,8 +328,9 @@ fn test_service_search() {
 		_ => panic!(),
 	}
 }
-#[test]
-fn test_service_serve() {
+
+#[actix_rt::test]
+async fn test_service_serve() {
 	let mut service = ServiceType::new(&format!("{}{}", TEST_DB_PREFIX, line!()));
 	service.complete_initial_setup();
 	service.login();
@@ -358,8 +360,8 @@ fn test_service_serve() {
 	}
 }
 
-#[test]
-fn test_service_playlists() {
+#[actix_rt::test]
+async fn test_service_playlists() {
 	let mut service = ServiceType::new(&format!("{}{}", TEST_DB_PREFIX, line!()));
 	service.complete_initial_setup();
 	service.login();
@@ -398,8 +400,8 @@ fn test_service_playlists() {
 	assert_eq!(playlists.len(), 0);
 }
 
-#[test]
-fn test_service_thumbnail() {
+#[actix_rt::test]
+async fn test_service_thumbnail() {
 	let mut service = ServiceType::new(&format!("{}{}", TEST_DB_PREFIX, line!()));
 	service.complete_initial_setup();
 	service.login();
