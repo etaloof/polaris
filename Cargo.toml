@@ -8,12 +8,13 @@ edition = "2018"
 default = ["service-actix"]
 ui = ["uuid", "winapi"]
 profile-index = ["flame", "flamer"]
-service-actix = ["actix", "actix-web", "futures"]
+service-actix = ["actix", "actix-web", "futures", "actix-rt"]
 service-rocket = ["rocket", "rocket_contrib"]
 
 [dependencies]
 actix = { version = "0.10", optional = true }
 actix-web = { version = "3", optional = true }
+actix-rt = { version = "*", optional = true }
 anyhow = "1.0.31"
 ape = "0.3.0"
 base64 = "0.12.1"
